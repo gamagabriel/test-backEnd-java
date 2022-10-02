@@ -1,9 +1,8 @@
 package com.uol.api.controller;
 
+import com.uol.api.client.Vingadores;
 import com.uol.api.model.dto.UserDto;
-import com.uol.api.repository.UserRepository;
 import com.uol.api.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +21,10 @@ public class UserController {
     public ResponseEntity saveUser(@RequestBody @Valid UserDto userDto){
         userService.saveUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping
+    public Vingadores vingadoresList(){
+        return vingadoresList();
     }
 }

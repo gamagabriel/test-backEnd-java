@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
@@ -22,6 +21,9 @@ public class UserServiceTest {
 
     @Mock
     private ModelMapper modelMapper;
+
+    @Mock
+    private UserRepository userRepository;
 
     private UserDto userDto;
 
@@ -38,7 +40,6 @@ public class UserServiceTest {
         when(modelMapper.map(userDto, User.class)).thenReturn(user);
         assertDoesNotThrow(() -> userService.saveUser(userDto));
     }
-
 
     UserDto userDto() {
         return new UserDto("Gabriel Gama", "gabriel@gabriel.com", "(27)999999999");
