@@ -1,4 +1,4 @@
-package com.uol.api.core;
+package com.uol.api.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
