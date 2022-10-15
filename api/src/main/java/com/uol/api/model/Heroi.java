@@ -18,6 +18,6 @@ public class Heroi {
 
     private HeroiEnum heroiEnum;
     @Id
-    private String heroi;
+    private String heroiCodNome;
 
 }

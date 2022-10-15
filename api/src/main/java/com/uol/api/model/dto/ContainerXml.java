@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class ContainerXml {
+
     @JsonProperty("codinomes")
-    private List<String> codNames;
+    private List<String> ligaDaJustica;
 }

@@ -12,14 +12,20 @@ public class PlayerService {
 
     @Autowired
     private PlayerRepository playerRepository;
+
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private HeroiService heroiService;
 
-    public Player savePlayer(PlayerDto playerDto){
-        Player player = modelMapper.map(playerDto, Player.class);
+    public Player savePlayer(PlayerDto playerDto) {
+        Player player = new Player();
+            player.setName(playerDto.getName());
+            player.setEmail(playerDto.getEmail());
+            player.setPhoneNumber(playerDto.getPhoneNumber());
+            player.setHeroi(heroiService.salvaHeroi(playerDto.getHeroiEnum()));
         return playerRepository.save(player);
     }
+
 }

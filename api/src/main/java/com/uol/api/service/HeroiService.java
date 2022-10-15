@@ -1,57 +1,72 @@
 package com.uol.api.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.uol.api.enums.HeroiEnum;
+import com.uol.api.model.Heroi;
 import com.uol.api.model.dto.ContainerJson;
 import com.uol.api.model.dto.ContainerXml;
 import com.uol.api.repository.HeroiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Service;
 
-@Component
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+//Criar métodos com as seguintes funções:
+// 1° verificar se há codinomes disponíveis para salvar.
+// 2° Método para salvar o codinome.
+//
+@Service
+@Transactional
 public class HeroiService {
 
     @Autowired
-    private ObjectMapper mapper;
+    private HttpService httpService;
 
     @Autowired
     private HeroiRepository heroiRepository;
-    private RestTemplate restTemplate = new RestTemplate();
-    private XmlMapper xmlMapper = new XmlMapper();
-    @Value("${url.json}")
-    private String baseUrlJson;
-    @Value("${url.xml}")
-    private String baseUrlXml;
 
-    public ContainerJson getVingadores(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestHttpEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(baseUrlJson, HttpMethod.GET, requestHttpEntity, String.class);
-        try {
-            return mapper.readValue(responseEntity.getBody(), ContainerJson.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+    public Heroi salvaHeroi(HeroiEnum heroiEnum) {
+        List<Heroi> heroiList = this.heroiRepository.findByHeroiEnum(heroiEnum);
+        Heroi heroi = new Heroi();
+        heroi.setHeroiEnum(heroiEnum);
+
+        if (heroi.getHeroiEnum().equals(HeroiEnum.VINGADORES)) {
+            ContainerJson containerJson = this.httpService.getVingadores();
+            List<String> codinomeJson = containerJson.getVingadores()
+                    .stream()
+                    .map(x -> x.get("codinome"))
+                    .toList();
+            heroi.setHeroiCodNome(this.verificarSeCodinomeDisponivel(heroiList, codinomeJson));
+        } else {
+            ContainerXml containerXml = this.httpService.getLiga();
+            List<String> codinomeXml = containerXml.getLigaDaJustica()
+                    .stream()
+                    .toList();
+            heroi.setHeroiCodNome(this.verificarSeCodinomeDisponivel(heroiList, codinomeXml));
+
         }
+        return heroi;
     }
 
-    public ContainerXml getLiga() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_XML);
-        HttpEntity<String> requestHttpEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(this.baseUrlXml, HttpMethod.GET, requestHttpEntity, String.class);
-            try {
-                return xmlMapper.readValue(responseEntity.getBody(), ContainerXml.class);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                return null;
+    private String verificarSeCodinomeDisponivel(List<Heroi> heroiList, List<String> codinome) {
+        final List<String> verificarNome = new ArrayList<>(codinome);
+
+        try {
+            if (heroiList.size() >= 1) {
+                heroiList.forEach(heroi -> verificarNome
+                        .removeIf(comparator ->
+                                comparator.equals(heroi.getHeroiCodNome())));
             }
+            if (verificarNome.size() >= 1) {
+                Random random = new Random(verificarNome.size());
+                return verificarNome.get(random.nextInt(verificarNome.size()));
+            }
+        } catch (IllegalArgumentException e){
+            return "Opa! Parece que chegamos ao fim dessa lista de Heróis. Poderia tentar outra lista?";
+        }
+        throw new RuntimeException();
     }
-
 
 }
