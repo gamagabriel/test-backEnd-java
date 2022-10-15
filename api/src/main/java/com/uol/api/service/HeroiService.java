@@ -63,7 +63,7 @@ public class HeroiService {
                 return verificarNome.get(random.nextInt(verificarNome.size()));
             }
         } catch (IllegalArgumentException | EntityExistsException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
         return null;
     }
