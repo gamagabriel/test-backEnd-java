@@ -8,6 +8,7 @@ import com.uol.api.repository.HeroiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,19 +55,17 @@ public class HeroiService {
         final List<String> verificarNome = new ArrayList<>(codinome);
 
         try {
-            if (heroiList.size() >= 1) {
+            if (heroiList.size() >= 1 || verificarNome.size() >= 1) {
                 heroiList.forEach(heroi -> verificarNome
                         .removeIf(comparator ->
                                 comparator.equals(heroi.getHeroiCodNome())));
-            }
-            if (verificarNome.size() >= 1) {
                 Random random = new Random(verificarNome.size());
                 return verificarNome.get(random.nextInt(verificarNome.size()));
             }
-        } catch (IllegalArgumentException e){
-            return "Opa! Parece que chegamos ao fim dessa lista de Heróis. Poderia tentar outra lista?";
+        } catch (IllegalArgumentException | EntityExistsException e) {
+            e.getMessage();
         }
-        throw new RuntimeException();
+        return null;
     }
 
 }
