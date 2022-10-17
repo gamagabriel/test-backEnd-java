@@ -20,11 +20,9 @@ public class PlayerService {
     private HeroiService heroiService;
 
     public Player savePlayer(PlayerDto playerDto) {
-        Player player = new Player();
-            player.setName(playerDto.getName());
-            player.setEmail(playerDto.getEmail());
-            player.setPhoneNumber(playerDto.getPhoneNumber());
-            player.setHeroi(heroiService.salvaHeroi(playerDto.getHeroiEnum()));
+        this.modelMapper.typeMap(PlayerDto.class, Player.class).addMappings(c -> c.skip(Player::setHeroi));
+        final Player player = this.modelMapper.map(playerDto, Player.class);
+        player.setHeroi(this.heroiService.salvaHeroi(playerDto.getHeroiEnum()));
         return playerRepository.save(player);
     }
 

@@ -13,10 +13,13 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class PlayerDto {
 
-    @NotBlank
+    @NotBlank(message = "O campo nome não pode estar vazio.")
     private String name;
-    @Email @NotBlank
+    @Email(message = "Digite um formato de e-mail válido.")
+    @NotBlank (message = "O campo nome não pode estar vazio.")
     private String email;
+
     private String phoneNumber;
+    @NotBlank(message = "O campo Heroi é obrigatório.")
     private HeroiEnum heroiEnum;
 }

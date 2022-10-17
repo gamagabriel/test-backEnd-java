@@ -1,10 +1,12 @@
 package com.uol.api.service;
 
 import com.uol.api.enums.HeroiEnum;
+import com.uol.api.exceptions.CodinomeJáExistenteException;
 import com.uol.api.model.Heroi;
 import com.uol.api.model.dto.ContainerJson;
 import com.uol.api.model.dto.ContainerXml;
 import com.uol.api.repository.HeroiRepository;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,37 +37,32 @@ public class HeroiService {
 
         if (heroi.getHeroiEnum().equals(HeroiEnum.VINGADORES)) {
             ContainerJson containerJson = this.httpService.getVingadores();
-            List<String> codinomeJson = containerJson.getVingadores()
-                    .stream()
-                    .map(x -> x.get("codinome"))
-                    .toList();
+            List<String> codinomeJson = containerJson.getVingadores().stream().map(x -> x.get("codinome")).toList();
             heroi.setHeroiCodNome(this.verificarSeCodinomeDisponivel(heroiList, codinomeJson));
         } else {
             ContainerXml containerXml = this.httpService.getLiga();
-            List<String> codinomeXml = containerXml.getLigaDaJustica()
-                    .stream()
-                    .toList();
+            List<String> codinomeXml = containerXml.getLigaDaJustica().stream().toList();
             heroi.setHeroiCodNome(this.verificarSeCodinomeDisponivel(heroiList, codinomeXml));
 
         }
         return heroi;
     }
 
+    @SneakyThrows
     private String verificarSeCodinomeDisponivel(List<Heroi> heroiList, List<String> codinome) {
         final List<String> verificarNome = new ArrayList<>(codinome);
 
         try {
             if (heroiList.size() >= 1 || verificarNome.size() >= 1) {
-                heroiList.forEach(heroi -> verificarNome
-                        .removeIf(comparator ->
-                                comparator.equals(heroi.getHeroiCodNome())));
+                heroiList.forEach(heroi -> verificarNome.removeIf(comparator -> comparator.equals(heroi.getHeroiCodNome())));
                 Random random = new Random(verificarNome.size());
                 return verificarNome.get(random.nextInt(verificarNome.size()));
             }
-        } catch (IllegalArgumentException | EntityExistsException e) {
-            e.printStackTrace();
+        } catch (EntityExistsException | IllegalArgumentException e){
+            throw new CodinomeJáExistenteException("Olá! Essa lista não possui mais codinomes disponíveis.", e.getCause());
         }
-        return null;
+
+            return null;
     }
 
 }

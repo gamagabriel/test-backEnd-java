@@ -22,7 +22,7 @@ public class PlayerController {
     private PlayerService playerService;
 
     @PostMapping("/player")
-    public ResponseEntity<Player> savePlayer(@RequestBody @Valid PlayerDto playerDto){
+    public ResponseEntity<Player> savePlayer(@RequestBody @Valid PlayerDto playerDto) {
         playerService.savePlayer(playerDto);
         return ResponseEntity.status(CREATED).build();
     }
