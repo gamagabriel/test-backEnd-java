@@ -20,6 +20,5 @@ public class PlayerDto {
     private String email;
 
     private String phoneNumber;
-    @NotBlank(message = "O campo Heroi é obrigatório.")
     private HeroiEnum heroiEnum;
 }

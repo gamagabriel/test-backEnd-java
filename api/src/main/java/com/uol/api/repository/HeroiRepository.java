@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface HeroiRepository extends JpaRepository<Heroi, Long> {
-
     List<Heroi> findByHeroiEnum (HeroiEnum heroiEnum);
 }
