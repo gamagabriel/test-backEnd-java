@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank
@@ -29,6 +29,6 @@ public class Player {
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "heroi_id")
-    private Heroi heroi;
+    @JoinColumn(name = "hero")
+    private Hero hero;
 }

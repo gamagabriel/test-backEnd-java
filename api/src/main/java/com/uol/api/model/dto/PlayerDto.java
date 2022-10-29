@@ -1,6 +1,6 @@
 package com.uol.api.model.dto;
 
-import com.uol.api.enums.HeroiEnum;
+import com.uol.api.enums.HeroType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +13,13 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class PlayerDto {
 
-    @NotBlank(message = "O campo nome não pode estar vazio.")
+    @NotBlank(message = "The name field cannot be blank.")
     private String name;
-    @Email(message = "Digite um formato de e-mail válido.")
-    @NotBlank (message = "O campo nome não pode estar vazio.")
+    @Email(message = "Enter a valid email format")
+    @NotBlank (message = "The email field cannot be blank")
     private String email;
 
     private String phoneNumber;
-    private HeroiEnum heroiEnum;
+
+    private HeroType heroType;
 }

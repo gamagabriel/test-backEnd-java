@@ -1,29 +1,30 @@
 package com.uol.api.service;
 
+import com.uol.api.model.Persister;
 import com.uol.api.model.Player;
 import com.uol.api.model.dto.PlayerDto;
 import com.uol.api.repository.PlayerRepository;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PlayerService {
+@AllArgsConstructor
+public class PlayerService implements Persister <PlayerDto> {
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private HeroiService heroiService;
+    private final HeroService heroService;
 
-    public Player savePlayer(PlayerDto playerDto) {
-        this.modelMapper.typeMap(PlayerDto.class, Player.class).addMappings(c -> c.skip(Player::setHeroi));
+
+    @Override
+    public void save(PlayerDto playerDto) {
+        this.modelMapper.typeMap(PlayerDto.class, Player.class).addMappings(skip -> skip.skip(Player::setHero));
         final Player player = this.modelMapper.map(playerDto, Player.class);
-        player.setHeroi(this.heroiService.salvaHeroi(playerDto.getHeroiEnum()));
-        return playerRepository.save(player);
+        player.setHero(heroService.save(playerDto.getHeroType()));
+        playerRepository.save(player);
     }
 
 }
