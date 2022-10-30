@@ -15,8 +15,9 @@ public class PlayerDto {
 
     @NotBlank(message = "The name field cannot be blank.")
     private String name;
+
     @Email(message = "Enter a valid email format")
-    @NotBlank (message = "The email field cannot be blank")
+    @NotBlank(message = "The email field cannot be blank")
     private String email;
 
     private String phoneNumber;

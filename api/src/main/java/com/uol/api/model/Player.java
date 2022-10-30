@@ -25,10 +25,11 @@ public class Player {
 
     @Email @NotBlank
     private String email;
-    
+
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hero")
+    @JoinColumn(name = "codename")
     private Hero hero;
+
 }

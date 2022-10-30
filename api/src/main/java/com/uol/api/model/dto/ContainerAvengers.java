@@ -5,10 +5,11 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Data
-public class ContainerXml {
+public class ContainerAvengers {
 
-    @JsonProperty("codinomes")
-    private List<String> ligaDaJustica = new ArrayList<>();
+    @JsonProperty("vingadores")
+    private List<Map<String, String>> vingadores = new ArrayList<>();
 }
