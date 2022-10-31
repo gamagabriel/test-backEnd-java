@@ -18,13 +18,9 @@ import java.util.Random;
 @AllArgsConstructor
 public class HeroService {
     public static final String CODENAME = "codinome";
-
     private final RequestHttpAvengers requestHttpAvengers;
-
     private final RequestHttpLeague requestHttpLeague;
-
     private final HeroRepository heroRepository;
-
 
     public Hero save(HeroType heroType) {
         final List<Hero> heroList = this.heroRepository.findByType(heroType);
@@ -38,6 +34,7 @@ public class HeroService {
     private String checkCodnameAvailable(List<Hero> heroList, List<String> codename) {
 
         final List<String> verifyCodename = new ArrayList<>(codename);
+
         try {
             if (isIfElements(heroList, verifyCodename)) {
                 heroList.forEach(hero -> verifyCodename.removeIf(comparator -> comparator.equals(hero.getCodename())));

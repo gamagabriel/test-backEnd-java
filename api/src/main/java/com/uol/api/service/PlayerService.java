@@ -13,11 +13,8 @@ import org.springframework.stereotype.Service;
 public class PlayerService implements Persister <PlayerDto> {
 
     private final PlayerRepository playerRepository;
-
     private final ModelMapper modelMapper;
-
     private final HeroService heroService;
-
 
     @Override
     public void save(PlayerDto playerDto) {
@@ -26,5 +23,4 @@ public class PlayerService implements Persister <PlayerDto> {
         player.setHero(heroService.save(playerDto.getHeroType()));
         playerRepository.save(player);
     }
-
 }

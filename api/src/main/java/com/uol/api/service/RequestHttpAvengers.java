@@ -2,7 +2,9 @@ package com.uol.api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uol.api.exceptions.FailRequestHttpException;
 import com.uol.api.model.dto.ContainerAvengers;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -19,16 +21,17 @@ public class RequestHttpAvengers {
     private String baseUrlJson;
 
 
+    @SneakyThrows
     public ContainerAvengers getVingadores() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestHttpEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(baseUrlJson, HttpMethod.GET, requestHttpEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate
+                .exchange(baseUrlJson, HttpMethod.GET, requestHttpEntity, String.class);
         try {
             return mapper.readValue(responseEntity.getBody(), ContainerAvengers.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            throw new FailRequestHttpException();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.uol.api.handler;
 
+import com.uol.api.exceptions.FailRequestHttpException;
 import com.uol.api.exceptions.GroupIsFullException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 
     @ExceptionHandler(value = {GroupIsFullException.class})
-    protected ResponseEntity<Object> handleConflit(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handlerGroupIsFull(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Hi! This group is full. Please, try again with other group. :)";
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value = {FailRequestHttpException.class})
+    protected ResponseEntity<Object> handlerFailRequestHttp(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Hi! We are having technical problems. Please try again later. :)";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
